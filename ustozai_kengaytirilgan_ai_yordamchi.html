@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UstozAI — Kengaytirilgan AI Yordamchi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight text-slate-900">Ustoz<span class="text-brand-600">AI</span></span>
+                    <span class="block text-xs font-medium text-slate-500">Pedagogik Intellektual Tizim</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-brand-600 bg-brand-50 transition-colors">Bosh sahifa</button>
+                <button onclick="switchTab('problem')" id="nav-problem" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">Muammo & Yechim</button>
+                <button onclick="switchTab('team')" id="nav-team" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">Jamoa</button>
+                <button onclick="switchTab('roadmap')" id="nav-roadmap" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">Yo'l xaritasi</button>
+                <button onclick="switchTab('architecture')" id="nav-architecture" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">Arxitektura</button>
+                <button onclick="switchTab('demo')" id="nav-demo" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 shadow-sm transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-play text-xs"></i>
+                    <span>/demo sahifasi</span>
+                </button>
+            </nav>
+
+            <!-- User  Greeting & Mobile Menu Toggle -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full">
+                    <div class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></div>
+                    <span class="text-xs font-semibold text-emerald-800">Xush kelibsiz!</span>
+                </div>
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1">
+            <div class="px-3 py-2 mb-2 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-semibold sm:hidden">
+                Xush kelibsiz!
+            </div>
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Bosh sahifa</button>
+            <button onclick="switchTab('problem'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Muammo & Yechim</button>
+            <button onclick="switchTab('team'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Jamoa</button>
+            <button onclick="switchTab('roadmap'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Yo'l xaritasi</button>
+            <button onclick="switchTab('architecture'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:bg-slate-100">Arxitektura</button>
+            <button onclick="switchTab('demo'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md text-base font-semibold text-brand-600 bg-brand-50 hover:bg-brand-100">/demo sahifasi</button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+
+        <!-- TAB 1: HOME & OVERVIEW -->
+        <section id="tab-home" class="tab-content">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white py-20 lg:py-28">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="max-w-3xl">
+                        <div class="inline-flex items-center space-x-2 bg-brand-500/20 border border-brand-500/30 text-brand-400 px-4 py-1.5 rounded-full text-xs font-semibold mb-6">
+                            <i class="fa-solid fa-sparkles"></i>
+                            <span>Hurmatli foydalanuvchi, o'qituvchilar uchun maxsus AI yordamchi</span>
+                        </div>
+                        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                            UstozAI — O'qituvchining <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Intellektual Ko'makchisi</span>
+                        </h1>
+                        <p class="text-lg sm:text-xl text-slate-300 mb-8 leading-relaxed">
+                            Faqat quruq baholarni emas, bilim sifati, barqarorlik va yashirin bo‘shliqlarni tahlil qiluvchi, o‘qituvchiga aniq harakatlar rejasi beruvchi kengaytirilgan pedagogik AI tizimi.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="switchTab('demo')" class="px-8 py-4 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-500 shadow-lg shadow-brand-600/30 transition-all flex items-center space-x-3">
+                                <i class="fa-solid fa-play"></i>
+                                <span>Demo Prototipni Sinash (/demo)</span>
+                            </button>
+                            <button onclick="switchTab('problem')" class="px-8 py-4 rounded-xl font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all">
+                                Imkoniyatlar bilan tanishish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Highlights / 6 Core Tasks -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-brand-600 mb-3">Pedagogy Suite</h2>
+                    <p class="text-3xl font-bold text-slate-900">AI Yordamchining 6 ta Asosiy Vazifasi</p>
+                    <p class="text-slate-600 mt-2">foydalanuvchi uchun maxsus ishlab chiqilgan pedagogik intellekt moduli.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Task 1 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xl mb-6 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">1. Bilimdagi bo‘shliqlarni aniqlash</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">O‘quvchining test natijalari, vaqt davomidagi dinamikasini tahlil qiladi.</p>
+                        <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 italic border-l-2 border-brand-500">
+                            Misol: Grammar yaxshi, lekin Reading kontekst tushunishida xatolar ko'p.
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xl mb-6 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-route"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">2. Keyingi rivojlanish yo‘li</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">O‘quvchi qaysi ko‘nikmalarni rivojlantirishi va qanday mashq bajarishini taklif qiladi.</p>
+                        <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 italic border-l-2 border-brand-500">
+                            Misol: Yuqori grammatikaga ega o'quvchiga murakkab matnlar va essay yozishni tavsiya qilish.
+                        </div>
+                    </div>
+
+                    <!-- Task 3 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xl mb-6 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">3. O‘xshash holatlar yechimi</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">Shu kabi qiyinchilikka duch kelgan boshqa o‘quvchilarda ishlagan yechimlarni ko'rsatadi.</p>
+                        <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 italic border-l-2 border-brand-500">
+                            Misol: Anonim tarzda o'xshash muammoni yenggan o'quvchilar tajribasini taqdim etish.
+                        </div>
+                    </div>
+
+                    <!-- Task 4 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xl mb-6 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">4. Yashirin xavflarni aniqlash</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">Faqat past baholarni emas, beqarorlik va takroriy xatolarni kuzatib boradi.</p>
+                        <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 italic border-l-2 border-brand-500">
+                            Misol: Umumiy ball yuqori, ammo murakkab savollardagi natija pasayib borayotganini aniqlash.
+                        </div>
+                    </div>
+
+                    <!-- Task 5 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xl mb-6 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-book-bookmark"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">5. Qo‘shimcha resurslar</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">O‘quvchining maqsadiga mos materiallar, loyihalar va takrorlash rejalarini tuzadi.</p>
+                        <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 italic border-l-2 border-brand-500">
+                            Misol: B2 darajaga chiqish uchun maxsus haftalik Listening va Speaking rejasi.
+                        </div>
+                    </div>
+
+                    <!-- Task 6 -->
+                    <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-xl mb-6 group-hover:bg-brand-600 group-hover:text-white transition-colors">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-3">6. O‘qituvchiga harakatlar rejasi</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">Individual suhbat, qo‘shimcha test yoki boshqa tushuntirish usullarini tavsiya qiladi.</p>
+                        <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-500 italic border-l-2 border-brand-500">
+                            Misol: Bir xil test berish o'rniga, strategiyani tekshiradigan qisqa mashg'ulot o'tkazish.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: PROBLEM & SOLUTION -->
+        <section id="tab-problem" class="tab-content hidden py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full">Bo'lim 1</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Muammo → Yechim</h2>
+                    <p class="text-slate-600 mt-2">foydalanuvchi uchun maxsus: Yuqori baho hamma narsa yaxshi degani emas!</p>
+                </div>
+
+                <!-- High Grade Fallacy Grid -->
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 mb-16">
+                    <h3 class="text-xl font-bold text-slate-900 mb-6 flex items-center space-x-2">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+                        <span>Yuqori baholar ortidagi yashirin signallar</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Holat 1</span>
+                            <h4 class="font-bold text-slate-900 mt-3 mb-1">Baholar yuqori, lekin juda tez javob beradi</h4>
+                            <p class="text-xs text-slate-600 mb-3">Savollar oson bo‘lishi yoki chuqur qo'llash imkoni bo'lmagan bo'lishi mumkin.</p>
+                            <div class="text-xs font-medium text-brand-700 bg-brand-50 p-2 rounded">Tavsiya: Murakkabroq, yangi vaziyatli savollar.</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Holat 2</span>
+                            <h4 class="font-bold text-slate-900 mt-3 mb-1">Umumiy ball yuqori, bitta ko'nikma zaif</h4>
+                            <p class="text-xs text-slate-600 mb-3">Umumiy natija muhim bo'lgan bo'shliqni yashirayotgan bo'lishi mumkin.</p>
+                            <div class="text-xs font-medium text-brand-700 bg-brand-50 p-2 rounded">Tavsiya: Shu ko'nikmaga alohida qisqa test.</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Holat 3</span>
+                            <h4 class="font-bold text-slate-900 mt-3 mb-1">Natijalar keskin o'zgarib turadi</h4>
+                            <p class="text-xs text-slate-600 mb-3">Bilim barqarorligi yoki testlar qiyinligi turlicha bo'lishi mumkin.</p>
+                            <div class="text-xs font-medium text-brand-700 bg-brand-50 p-2 rounded">Tavsiya: O'xshash qiyinlikdagi testlarni taqqoslash.</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Holat 4</span>
+                            <h4 class="font-bold text-slate-900 mt-3 mb-1">Testlar yuqori, amaliy topshiriqlar zaif</h4>
+                            <p class="text-xs text-slate-600 mb-3">Bilimni real hayotiy vaziyatda qo'llashda qiynalishi mumkin.</p>
+                            <div class="text-xs font-medium text-brand-700 bg-brand-50 p-2 rounded">Tavsiya: Amaliy loyiha yoki ochiq javobli topshiriq.</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Holat 5</span>
+                            <h4 class="font-bold text-slate-900 mt-3 mb-1">Doim bir xil darajadagi testlarni bajaradi</h4>
+                            <p class="text-xs text-slate-600 mb-3">Rivojlanish uchun yangi qiyinroq vazifalar kerak bo'lishi mumkin.</p>
+                            <div class="text-xs font-medium text-brand-700 bg-brand-50 p-2 rounded">Tavsiya: Keyingi darajaga tayyorligini tekshirish.</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+                            <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">Holat 6</span>
+                            <h4 class="font-bold text-slate-900 mt-3 mb-1">Ayrim mavzular uzoq vaqt tekshirilmagan</h4>
+                            <p class="text-xs text-slate-600 mb-3">Esdan chiqish ehtimoli mavjud yoki ma'lumot yetarli emas.</p>
+                            <div class="text-xs font-medium text-brand-700 bg-brand-50 p-2 rounded">Tavsiya: Oraliq takrorlash testi.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reliability Rules -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">UstozAI'ning Ishonchlilik Qoidalari</h3>
+                        <p class="text-slate-600 mb-6 text-sm leading-relaxed">
+                            AI ehtimoliy muammoni aniqlaydi, lekin dalilsiz tashxis qo'ymaydi. O'qituvchi nazorati va ma'lumotlar shaffofligi birinchi o'rinda turadi.
+                        </p>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-center space-x-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span><strong>Dalilga asoslanish:</strong> Har bir xulosa test natijasi bilan izohlanadi.</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span><strong>Noaniqlikni tan olish:</strong> Ma'lumot yetarli bo'lmasa qo'shimcha tekshiruv tavsiya qilinadi.</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span><strong>O'quvchini yorliqlamaslik:</strong> Tizim hech qachon salbiy baho bermaydi.</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <i class="fa-solid fa-check text-brand-600"></i>
+                                <span><strong>O'qituvchi nazorati:</strong> AI tavsiyalari faqat maslahat sifatida ishlaydi.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-gradient-to-br from-emerald-900 to-slate-900 p-8 rounded-2xl text-white shadow-xl">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Yakuniy Diagnostika Modeli</span>
+                        <h4 class="text-xl font-bold mt-2 mb-4">Uchta Asosiy Ustun</h4>
+                        <div class="space-y-4 text-sm text-slate-300">
+                            <div class="p-3 bg-white/10 rounded-xl">
+                                <strong class="text-white block mb-1">1. Diagnostika</strong>
+                                Hozirgi bilim holati va yashirin muammolarni aniqlash.
+                            </div>
+                            <div class="p-3 bg-white/10 rounded-xl">
+                                <strong class="text-white block mb-1">2. Rivojlantirish</strong>
+                                Keyingi ko'nikmalar va moslashuvchan o'rganish rejasi.
+                            </div>
+                            <div class="p-3 bg-white/10 rounded-xl">
+                                <strong class="text-white block mb-1">3. Tajriba bazasi</strong>
+                                O'qituvchilar qo'llagan muvaffaqiyatli usullarni umumlashtirish.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: TEAM -->
+        <section id="tab-team" class="tab-content hidden py-16 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full">Bo'lim 2 & 3</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Bizning Jamoa</h2>
+                    <p class="text-slate-600 mt-2">foydalanuvchi boshchiligidagi tajribali EdTech va AI mutaxassislar jamoasi.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                    <!-- Member 1 -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center shadow-sm">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-2xl font-bold mb-4">
+                            G
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">foydalanuvchi</h3>
+                        <p class="text-xs font-semibold text-brand-600 mb-3">Lead Product Architect & AI Researcher</p>
+                        <p class="text-xs text-slate-600 mb-4">Pedagogik algoritmlar, ma'lumotlar arxitekturasi va AI modellarini integratsiya qilish bo'yicha mutaxassis.</p>
+                        <div class="flex justify-center space-x-3 text-slate-500">
+                            <a href="#" class="hover:text-brand-600"><i class="fa-brands fa-github"></i></a>
+                            <a href="#" class="hover:text-brand-600"><i class="fa-brands fa-linkedin"></i></a>
+                            <a href="#" class="hover:text-brand-600"><i class="fa-solid fa-globe"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Member 2 -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center shadow-sm">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-2xl font-bold mb-4">
+                            AS
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Azizbek Sadikov</h3>
+                        <p class="text-xs font-semibold text-teal-600 mb-3">Senior Backend & Django Developer</p>
+                        <p class="text-xs text-slate-600 mb-4">Ma'lumotlar bazasi arxitekturasi, xavfsizlik va RESTful API tizimlarini loyihalashtirish ustasi.</p>
+                        <div class="flex justify-center space-x-3 text-slate-500">
+                            <a href="#" class="hover:text-teal-600"><i class="fa-brands fa-github"></i></a>
+                            <a href="#" class="hover:text-teal-600"><i class="fa-brands fa-linkedin"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Member 3 -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center shadow-sm">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-2xl font-bold mb-4">
+                            NM
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900">Nodira Mahmudova</h3>
+                        <p class="text-xs font-semibold text-indigo-600 mb-3">EdTech & Data Science Specialist</p>
+                        <p class="text-xs text-slate-600 mb-4">Ta'lim metodologiyasi, o'quvchi analitikasi va Machine Learning trendlarini tahlil qilish bo'yicha ekspert.</p>
+                        <div class="flex justify-center space-x-3 text-slate-500">
+                            <a href="#" class="hover:text-indigo-600"><i class="fa-brands fa-github"></i></a>
+                            <a href="#" class="hover:text-indigo-600"><i class="fa-brands fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Why our team can solve this (Section 3) -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-8 lg:p-12 shadow-sm">
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full">Bo'lim 3</span>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-3 mb-4">Nima uchun jamoamiz bu muammoni hal qila oladi?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div class="space-y-2">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900">Chuqur Pedagogik Tajriba</h4>
+                            <p class="text-xs text-slate-600">O'qituvchilar duch keladigan real kundalik muammolar va o'quvchilar psixologiyasini chuqur tushunamiz.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900">Kuchli Texnik Stack</h4>
+                            <p class="text-xs text-slate-600">Django, Python Data Science kutubxonalari va zamonaviy frontend texnologiyalarini mukammal birlashtira olamiz.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-900">Amaliy Natija va MVP</h4>
+                            <p class="text-xs text-slate-600">Nazariyadan tashqari real o'quv markazlarida sinovdan o'tkazish va tezkor iteratsiya qilish tajribamiz bor.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: ROADMAP -->
+        <section id="tab-roadmap" class="tab-content hidden py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full">Bo'lim 4</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Loyihaning Yo'l Xaritasi (Roadmap)</h2>
+                    <p class="text-slate-600 mt-2">foydalanuvchi va jamoaning g'oyadan to launch bosqichigacha bo'lgan rejasi.</p>
+                </div>
+
+                <div class="relative border-l-2 border-brand-500 ml-4 md:ml-32 space-y-12 py-4">
+                    <!-- Phase 1: Idea -->
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white">1</div>
+                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-xs">
+                            <span class="text-xs font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded">1-Bosqich: Idea (G'oya va Konsepsiya)</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-2 mb-1">Pedagogik tahlil va arxitektura tuzish</h3>
+                            <p class="text-xs text-slate-600 mb-3">O'qituvchilarning kundalik muammolarini o'rganish, yuqori baho ortidagi yashirin xavflar g'oyasini shakllantirish.</p>
+                            <span class="text-[11px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 1-2 hafta</span>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2: Prototype -->
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white">2</div>
+                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-xs">
+                            <span class="text-xs font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded">2-Bosqich: Prototype (Prototip)</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-2 mb-1">Interaktiv dizayn va simulyator</h3>
+                            <p class="text-xs text-slate-600 mb-3">Django va Tailwind yordamida dastlabki interfeys, o'quvchi tahlil paneli va AI chatbot prototipini yaratish.</p>
+                            <span class="text-[11px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 3-5 hafta</span>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3: MVP -->
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white">3</div>
+                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-xs">
+                            <span class="text-xs font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded">3-Bosqich: MVP (Minimum Viable Product)</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-2 mb-1">Real test natijalari va Skill, LearningSignal modullari</h3>
+                            <p class="text-xs text-slate-600 mb-3">P0 ustuvorlikdagi barcha bazaviy modullarni ishga tushirish, o'qituvchilar uchun sinov testlarini o'tkazish.</p>
+                            <span class="text-[11px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 6-8 hafta</span>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4: Launched -->
+                    <div class="relative pl-8">
+                        <div class="absolute -left-[17px] top-0 w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-white">4</div>
+                        <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl shadow-xs">
+                            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded">4-Bosqich: Launched (Rasmiy Chiqish)</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-2 mb-1">Kengaytirilgan AI va Similar Cases bazasi</h3>
+                            <p class="text-xs text-slate-600 mb-3">Barcha o'quv markazlari uchun ochiq API, avtomatlashgan AI tavsiyalar va shunga o'xshash holatlar bazasini faollashtirish.</p>
+                            <span class="text-[11px] text-slate-400"><i class="fa-regular fa-clock mr-1"></i> 2 oy va undan keyin</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: ARCHITECTURE & IMPLEMENTATION -->
+        <section id="tab-architecture" class="tab-content hidden py-16 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-600 bg-brand-50 px-3 py-1 rounded-full">Bo'lim 5</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-3">Texnik Arxitektura va Amalga Oshirish</h2>
+                    <p class="text-slate-600 mt-2">foydalanuvchi va jamoa tomonidan rejalashtirilgan Django va Data Science qatlamlari.</p>
+                </div>
+
+                <!-- 4 Layers Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="text-brand-600 font-bold text-lg mb-3"><i class="fa-solid fa-database mr-2"></i> 1. Ma’lumotlar manbai</div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Test javoblari, qo‘lda kiritilgan baholar, vaqt, mavzular va amaliy topshiriqlar bazasi.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="text-brand-600 font-bold text-lg mb-3"><i class="fa-solid fa-chart-pie mr-2"></i> 2. Data Science qatlami</div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Trendlar, bilim bo‘shliqlari, beqaror natijalar va ko‘nikmalar xaritasini hisoblash.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="text-brand-600 font-bold text-lg mb-3"><i class="fa-solid fa-brain mr-2"></i> 3. AI tahlil qatlami</div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Ehtimoliy muammolar, rivojlanish rejasi, o‘xshash holatlar va qo‘shimcha resurslarni shakllantirish.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="text-brand-600 font-bold text-lg mb-3"><i class="fa-solid fa-chalkboard-user mr-2"></i> 4. O‘qituvchi yordamchisi</div>
+                        <p class="text-xs text-slate-600 leading-relaxed">Dalillar, tavsiyalar, ishonchlilik darajasi, tasdiqlash va natijani kuzatish interfeysi.</p>
+                    </div>
+                </div>
+
+                <!-- Database Models Table -->
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+                    <div class="px-6 py-4 bg-slate-900 text-white flex justify-between items-center">
+                        <h3 class="font-bold text-sm">Yangi Ma'lumotlar Bazasi Modellari (Django ORM)</h3>
+                        <span class="text-xs bg-brand-500 text-white px-2.5 py-1 rounded-full">Django Models</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs text-slate-700">
+                            <thead class="bg-slate-100 text-slate-800 uppercase font-semibold">
+                                <tr>
+                                    <th class="px-6 py-3">Model Nomi</th>
+                                    <th class="px-6 py-3">Nima uchun kerak?</th>
+                                    <th class="px-6 py-3">Asosiy Maydonlar (Fields)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200">
+                                <tr>
+                                    <td class="px-6 py-4 font-bold text-brand-700">Skill</td>
+                                    <td class="px-6 py-4">Reading, Speaking, Grammar kabi ko‘nikmalarni mavzulardan alohida kuzatish.</td>
+                                    <td class="px-6 py-4 font-mono text-slate-500">name, description, category</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-bold text-brand-700">LearningGoal</td>
+                                    <td class="px-6 py-4">O‘quvchining maqsadi va erishmoqchi bo‘lgan darajasi (masalan, B2).</td>
+                                    <td class="px-6 py-4 font-mono text-slate-500">student, target_level, deadline</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-bold text-brand-700">LearningSignal</td>
+                                    <td class="px-6 py-4">Kuzatilgan holat, dalillar, sana va tekshirish holati.</td>
+                                    <td class="px-6 py-4 font-mono text-slate-500">signal_type, evidence_data, is_confirmed</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-bold text-brand-700">Intervention</td>
+                                    <td class="px-6 py-4">O‘qituvchi tanlagan yordam, mashq yoki o‘qitish usuli.</td>
+                                    <td class="px-6 py-4 font-mono text-slate-500">title, method_description, teacher</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-bold text-brand-700">InterventionOutcome</td>
+                                    <td class="px-6 py-4">Yordamdan oldingi va keyingi natijalar taqqosi.</td>
+                                    <td class="px-6 py-4 font-mono text-slate-500">before_score, after_score, success_rate</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 font-bold text-brand-700">SimilarCaseSummary</td>
+                                    <td class="px-6 py-4">O‘xshash holatlar bo‘yicha anonim, umumlashtirilgan natijalar.</td>
+                                    <td class="px-6 py-4 font-mono text-slate-500">case_pattern, effective_methods, count</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: DEMO & TEACHER DASHBOARD SIMULATOR -->
+        <section id="tab-demo" class="tab-content hidden py-12 bg-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-r from-slate-900 to-emerald-900 rounded-3xl p-8 lg:p-12 text-white mb-10 shadow-xl flex flex-col md:flex-row justify-between items-center">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/20 px-3 py-1 rounded-full">/demo Sahifasi</span>
+                        <h2 class="text-3xl lg:text-4xl font-extrabold mt-3 mb-2">UstozAI Interaktiv Demo Markazi</h2>
+                        <p class="text-slate-300 text-sm max-w-2xl">
+                            Hurmatli foydalanuvchi, ushbu bo‘limda siz demo-videoni tomosha qilishingiz, uning batafsil tavsifi bilan tanishishingiz va real vaqtda ishlaydigan UstozAI O'qituvchi Paneli (Dashboard) prototipini sinab ko'rishingiz mumkin.
+                        </p>
+                    </div>
+                    <div class="mt-6 md:mt-0 bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/20 text-center">
+                        <span class="block text-xs text-emerald-300 font-semibold">Faol Foydalanuvchi</span>
+                        <span class="text-xl font-bold text-white">foydalanuvchi (O'qituvchi)</span>
+                    </div>
+                </div>
+
+                <!-- 6.1 & 6.2: Demo Video & Tavsifi -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Video Player Simulation -->
+                    <div class="lg:col-span-2 bg-slate-900 rounded-2xl overflow-hidden shadow-lg border border-slate-800 flex flex-col justify-between">
+                        <div class="relative bg-black aspect-video flex items-center justify-center group cursor-pointer" onclick="toggleVideoPlay()">
+                            <!-- Video Thumbnail / Screen -->
+                            <div id="video-poster" class="absolute inset-0 bg-gradient-to-tr from-slate-900 via-slate-800 to-emerald-950 flex flex-col items-center justify-center p-6 text-center">
+                                <div class="w-16 h-16 rounded-full bg-brand-600 text-white flex items-center justify-center text-2xl shadow-lg mb-4 group-hover:scale-110 transition-transform">
+                                    <i id="play-icon" class="fa-solid fa-play ml-1"></i>
+                                </div>
+                                <h4 class="text-white font-bold text-lg">UstozAI Platformasi Taqdimoti (3:45 daqiqa)</h4>
+                                <p class="text-xs text-slate-400 mt-1">foydalanuvchi uchun tayyorlangan maxsus video tahlil</p>
+                            </div>
+                            <!-- Fake Video Playing Animation State -->
+                            <div id="video-playing-state" class="hidden absolute inset-0 bg-slate-950 flex flex-col items-center justify-center">
+                                <div class="flex items-center space-x-2 text-brand-400 mb-2">
+                                    <div class="w-3 h-3 bg-brand-500 rounded-full animate-ping"></div>
+                                    <span class="text-sm font-semibold">Demo Video Ijro Etilmoqda...</span>
+                                </div>
+                                <p class="text-xs text-slate-400">AI tahlil paneli va o'quvchi signallari namoyish qilinmoqda.</p>
+                            </div>
+                        </div>
+
+                        <!-- Video Controls Bar -->
+                        <div class="bg-slate-900 px-6 py-4 flex items-center justify-between border-t border-slate-800 text-slate-400 text-xs">
+                            <div class="flex items-center space-x-4">
+                                <button onclick="toggleVideoPlay()" class="text-white hover:text-brand-400 text-base"><i id="ctrl-play-icon" class="fa-solid fa-play"></i></button>
+                                <span>01:15 / 03:45</span>
+                            </div>
+                            <div class="w-1/2 bg-slate-800 h-2 rounded-full overflow-hidden cursor-pointer">
+                                <div class="bg-brand-500 h-full w-1/3"></div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <button class="hover:text-white"><i class="fa-solid fa-volume-high"></i></button>
+                                <button class="hover:text-white"><i class="fa-solid fa-expand"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6.2: Demo Tavsifi -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded">6.2. Demo-videoning Tavsifi</span>
+                            <h3 class="text-lg font-bold text-slate-900 mt-3 mb-3">UstozAI qanday ishlaydi?</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                Ushbu videoda o'qituvchi foydalanuvchi uchun tizimning asosiy imkoniyatlari amalda ko'rsatilgan:
+                            </p>
+                            <ul class="space-y-2.5 text-xs text-slate-700">
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-brand-600 mt-0.5"></i>
+                                    <span><strong>O'quvchi profili:</strong> Baholari yuqori bo'lgan, ammo Reading ko'nikmasida yashirin bo'shlig'i bor o'quvchini aniqlash.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-brand-600 mt-0.5"></i>
+                                    <span><strong>AI Signal & Dalillar:</strong> Tizim nima uchun bu xulosaga kelganini ko'rsatuvchi dalillar bloki.</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <i class="fa-solid fa-check text-brand-600 mt-0.5"></i>
+                                    <span><strong>O'xshash holatlar:</strong> Boshqa o'quvchilarda sinab ko'rilgan va natija bergan usullarni qo'llash.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] text-slate-400">Davomiyligi: 3 daqiqa 45 soniya</span>
+                            <button onclick="switchTab('demo-simulator')" class="text-xs font-bold text-brand-600 hover:underline">Prototipga o'tish &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6.3: Ishlayotgan Prototip / Teacher Dashboard Simulator -->
+                <div id="demo-simulator" class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 lg:p-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b border-slate-200 mb-8 gap-4">
+                        <div>
+                            <span class="text-xs font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded">6.3. Ishlayotgan Prototip (Interactive Teacher Dashboard)</span>
+                            <h3 class="text-xl font-bold text-slate-900 mt-2">O'quvchi Tahlili va AI Signallar Paneli</h3>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="selectStudent('jasur')" id="btn-jasur" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white shadow-sm transition-all">Jasur (B2 - Ingliz tili)</button>
+                            <button onclick="selectStudent('dilnoza')" id="btn-dilnoza" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">Dilnoza (A1 - Matematika)</button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Student Dashboard Content -->
+                    <div id="student-dashboard-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left: Student Info & Scores -->
+                        <div class="space-y-6">
+                            <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                                <div class="flex items-center space-x-4 mb-4">
+                                    <div id="stu-avatar" class="w-14 h-14 rounded-2xl bg-brand-600 text-white font-bold text-xl flex items-center justify-center shadow-md">
+                                        JM
+                                    </div>
+                                    <div>
+                                        <h4 id="stu-name" class="font-bold text-slate-900 text-lg">Jasur Mahmudov</h4>
+                                        <p id="stu-group" class="text-xs text-slate-500">Guruh: IELTS Advanced (B2)</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-3 text-xs">
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Umumiy Ball:</span>
+                                        <strong id="stu-score" class="text-slate-900">88% (Yuqori)</strong>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Grammar:</span>
+                                        <span id="stu-grammar" class="font-semibold text-emerald-600">92% (Barqaror)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Reading:</span>
+                                        <span id="stu-reading" class="font-semibold text-amber-600">58% (Pasaymoqda)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-slate-500">Javob berish tezligi:</span>
+                                        <span id="stu-speed" class="font-semibold text-amber-600">Juda tez (Shubhali)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Recommendation Action Plan -->
+                            <div class="bg-emerald-50 border border-emerald-200 p-6 rounded-2xl">
+                                <h5 class="font-bold text-emerald-900 text-sm mb-2 flex items-center space-x-2">
+                                    <i class="fa-solid fa-robot text-brand-600"></i>
+                                    <span>AI Harakatlar Rejasi</span>
+                                </h5>
+                                <p id="stu-recommendation" class="text-xs text-emerald-800 leading-relaxed mb-4">
+                                    Jasurning Grammar natijalari zo'r, lekin Reading 3 ta ketma-ket testda tushib ketgan. Shoshilib javob bermoqda.
+                                </p>
+                                <button onclick="confirmIntervention()" id="intervention-btn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold shadow-sm transition-all">
+                                    Tavsiya etilgan mashqni tasdiqlash
+                                </button>
+                                <p id="intervention-status" class="text-[11px] text-center text-emerald-700 mt-2 hidden font-semibold">✓ Tavsiya o'qituvchi tomonidan tasdiqlandi!</p>
+                            </div>
+                        </div>
+
+                        <!-- Right: AI Signals & Similar Cases -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <!-- AI Signals Box -->
+                            <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                                <h4 class="font-bold text-slate-900 text-sm mb-4 flex items-center space-x-2">
+                                    <i class="fa-solid fa-signal text-brand-600"></i>
+                                    <span>Aniqlangan Learning Signals (Dalillar)</span>
+                                </h4>
+                                <div id="stu-signals-list" class="space-y-3">
+                                    <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs flex items-start space-x-3">
+                                        <div class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></div>
+                                        <div>
+                                            <strong class="text-slate-900 block mb-0.5">Natija pasayishi va tezkor javob</strong>
+                                            <p class="text-slate-600">Reading bo'yicha so'nggi 3 ta testda 72% dan 58% ga tushgan va savollarga o'rtachadan 3 barobar tez javob bergan.</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-xl border border-slate-200 text-xs flex items-start space-x-3">
+                                        <div class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0"></div>
+                                        <div>
+                                            <strong class="text-slate-900 block mb-0.5">Grammar barqarorligi</strong>
+                                            <p class="text-slate-600">Grammatik testlarda doimiy ravishda 90%+ natija ko'rsatmoqda.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Similar Cases Module -->
+                            <div class="bg-slate-50 border border-slate-200 p-6 rounded-2xl">
+                                <h4 class="font-bold text-slate-900 text-sm mb-4 flex items-center space-x-2">
+                                    <i class="fa-solid fa-users-viewfinder text-brand-600"></i>
+                                    <span>Similar Cases (O'xshash holatlar va yechimlar)</span>
+                                </h4>
+                                <p class="text-xs text-slate-600 mb-4">Shu kabi qiyinchilikka uchragan boshqa o'quvchilarda ishlagan anonim yechimlar:</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                                    <div class="bg-white p-3 rounded-xl border border-slate-200">
+                                        <span class="font-bold text-slate-900 block mb-1">1. Matn asosiy g'oyasi</span>
+                                        <p class="text-slate-500">Matnning asosiy g'oyasini aniqlash bo'yicha qisqa mashqlar (42 ta o'quvchida yordam bergan).</p>
+                                    </div>
+                                    <div class="bg-white p-3 rounded-xl border border-slate-200">
+                                        <span class="font-bold text-slate-900 block mb-1">2. Vaqtsiz o'qish</span>
+                                        <p class="text-slate-500">Vaqt chegarasisiz o'qish mashqi, keyin vaqt bilan bajariladigan test.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bonus Features: AI Chatbot & API Access -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+                    <!-- Bonus 1: AI Chatbot Simulator -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 lg:p-8 flex flex-col justify-between h-[500px]">
+                        <div>
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-robot"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 text-sm">UstozAI Chatbot (Pedagogik yordamchi)</h4>
+                                        <span class="text-[11px] text-emerald-600 font-semibold flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span> Online</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded font-mono">foydalanuvchi uchun maxsus</span>
+                            </div>
+
+                            <!-- Chat Messages Container -->
+                            <div id="chat-messages" class="space-y-3 overflow-y-auto h-64 pr-2 text-xs">
+                                <div class="bg-slate-100 p-3 rounded-2xl max-w-[85%] text-slate-800">
+                                    Salom foydalanuvchi! Men UstozAI pedagogik yordamchisiman. O'quvchilar tahlili bo'yicha qanday savolingiz bor?
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Quick Prompts & Input -->
+                        <div>
+                            <div class="flex flex-wrap gap-1.5 mb-3">
+                                <button onclick="sendPresetChat('Bu o‘quvchi keyingi bosqichga tayyormi?')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg transition-colors">Bu o‘quvchi keyingi bosqichga tayyormi?</button>
+                                <button onclick="sendPresetChat('Baholari yuqori, qaysi ko‘nikma tekshirilmagan?')" class="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg transition-colors">Baholari yuqori, qaysi ko‘nikma tekshirilmagan?</button>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <input type="text" id="chat-input" placeholder="Savol yozing..." class="flex-grow bg-slate-100 border border-slate-200 px-4 py-2.5 rounded-xl text-xs focus:outline-none focus:border-brand-500">
+                                <button onclick="sendUserMessage()" class="px-4 py-2.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition-all"><i class="fa-solid fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bonus 2: API Access Simulator -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 lg:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-terminal"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900 text-sm">UstozAI API Access</h4>
+                                        <span class="text-[11px] text-slate-500">REST API & Webhooks</span>
+                                    </div>
+                                </div>
+                                <button onclick="copyApiToken()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-mono">Token nusxalash</button>
+                            </div>
+
+                            <p class="text-xs text-slate-600 mb-4">
+                                O'quv markazingiz LMS tizimini UstozAI bilan integratsiya qilish uchun maxsus API endpointlar.
+                            </p>
+
+                            <!-- Code snippet -->
+                            <div class="bg-slate-900 rounded-xl p-4 text-emerald-400 font-mono text-[11px] overflow-x-auto mb-4 leading-relaxed">
+                                <span class="text-slate-500"># Python / Django API Request Example</span><br>
+                                <span class="text-blue-400">import</span> requests<br><br>
+                                url = <span class="text-amber-300">"https://api.ustoz.ai/v1/analytics/student/"</span><br>
+                                headers = &#123;<span class="text-amber-300">"Authorization"</span>: <span class="text-amber-300">"Bearer ustoz_ai_gey_token_2026"</span>&#125;<br>
+                                response = requests.get(url, headers=headers)<br>
+                                <span class="text-purple-400">print</span>(response.json())
+                            </div>
+                        </div>
+
+                        <div>
+                            <button onclick="testApiCall()" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-bolt text-amber-400"></i>
+                                <span>API So'rovini Sinash (Test Endpoint)</span>
+                            </button>
+                            <div id="api-result-box" class="hidden mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl text-[11px] font-mono text-slate-700">
+                                ✓ Status: 200 OK | Data: {"student": "Jasur", "status": "Analyzed", "risk": "Low"}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold">
+                    <i class="fa-solid fa-graduation-cap text-xs"></i>
+                </div>
+                <span class="text-white font-bold text-lg">Ustoz<span class="text-brand-500">AI</span></span>
+            </div>
+            <p class="text-xs text-slate-500 text-center md:text-left">
+                © 2026 UstozAI — Kengaytirilgan AI yordamchi. Barcha huquqlar himoyalangan. Maxsus yaratildi: foydalanuvchi uchun.
+            </p>
+            <div class="flex items-center space-x-4 text-xs">
+                <button onclick="switchTab('home')" class="hover:text-white">Bosh sahifa</button>
+                <button onclick="switchTab('demo')" class="hover:text-white">/demo</button>
+                <button onclick="switchTab('team')" class="hover:text-white">Jamoa</button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Navigation Logic
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            const targetTab = document.getElementById('tab-' + tabId);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Nav button styles
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                btn.classList.remove('text-brand-600', 'bg-brand-50');
+                btn.classList.add('text-slate-600');
+            });
+
+            const activeNav = document.getElementById('nav-' + tabId);
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-600');
+                activeNav.classList.add('text-brand-600', 'bg-brand-50');
+            }
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Video Player Simulation
+        let isVideoPlaying = false;
+        function toggleVideoPlay() {
+            isVideoPlaying = !isVideoPlaying;
+            const poster = document.getElementById('video-poster');
+            const playingState = document.getElementById('video-playing-state');
+            const playIcon = document.getElementById('play-icon');
+            const ctrlIcon = document.getElementById('ctrl-play-icon');
+
+            if (isVideoPlaying) {
+                poster.classList.add('hidden');
+                playingState.classList.remove('hidden');
+                playIcon.className = "fa-solid fa-pause ml-1";
+                ctrlIcon.className = "fa-solid fa-pause";
+            } else {
+                poster.classList.remove('hidden');
+                playingState.classList.add('hidden');
+                playIcon.className = "fa-solid fa-play ml-1";
+                ctrlIcon.className = "fa-solid fa-play";
+            }
+        }
+
+        // Teacher Dashboard Simulator Student Switcher
+        function selectStudent(studentKey) {
+            const btnJasur = document.getElementById('btn-jasur');
+            const btnDilnoza = document.getElementById('btn-dilnoza');
+            
+            const nameEl = document.getElementById('stu-name');
+            const groupEl = document.getElementById('stu-group');
+            const avatarEl = document.getElementById('stu-avatar');
+            const scoreEl = document.getElementById('stu-score');
+            const grammarEl = document.getElementById('stu-grammar');
+            const readingEl = document.getElementById('stu-reading');
+            const speedEl = document.getElementById('stu-speed');
+            const recEl = document.getElementById('stu-recommendation');
+            const statusEl = document.getElementById('intervention-status');
+
+            statusEl.classList.add('hidden');
+
+            if (studentKey === 'jasur') {
+                btnJasur.className = "px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white shadow-sm transition-all";
+                btnDilnoza.className = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all";
+                
+                nameEl.innerText = "Jasur Mahmudov";
+                groupEl.innerText = "Guruh: IELTS Advanced (B2)";
+                avatarEl.innerText = "JM";
+                scoreEl.innerText = "88% (Yuqori)";
+                grammarEl.innerText = "92% (Barqaror)";
+                readingEl.innerText = "58% (Pasaymoqda)";
+                speedEl.innerText = "Juda tez (Shubhali)";
+                recEl.innerText = "Jasurning Grammar natijalari zo'r, lekin Reading 3 ta ketma-ket testda tushib ketgan. Shoshilib javob bermoqda.";
+            } else {
+                btnDilnoza.className = "px-4 py-2 rounded-xl text-xs font-bold bg-brand-600 text-white shadow-sm transition-all";
+                btnJasur.className = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all";
+
+                nameEl.innerText = "Dilnoza Rahimova";
+                groupEl.innerText = "Guruh: Algebra & Logic (A1)";
+                avatarEl.innerText = "DR";
+                scoreEl.innerText = "74% (O'rta)";
+                grammarEl.innerText = "70% (Barqaror)";
+                readingEl.innerText = "80% (Yaxshi)";
+                speedEl.innerText = "Normal vaqt";
+                recEl.innerText = "Algebraik tenglamalarda takroriy xatolar mavjud. Qo'shimcha amaliy misollar berish tavsiya etiladi.";
+            }
+        }
+
+        function confirmIntervention() {
+            const statusEl = document.getElementById('intervention-status');
+            statusEl.classList.remove('hidden');
+        }
+
+        // AI Chatbot Logic
+        function sendPresetChat(question) {
+            const chatMessages = document.getElementById('chat-messages');
+            
+            // User message
+            const userMsg = document.createElement('div');
+            userMsg.className = "bg-brand-600 text-white p-3 rounded-2xl max-w-[85%] ml-auto text-right";
+            userMsg.innerText = question;
+            chatMessages.appendChild(userMsg);
+
+            // AI Response simulation
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = "bg-slate-100 p-3 rounded-2xl max-w-[85%] text-slate-800";
+                
+                if (question.includes('keyingi bosqichga')) {
+                    aiMsg.innerText = "Tahlil natijalariga ko'ra, o'quvchi umumiy testlarda 88% olmoqda, lekin Reading ko'nikmasida bo'shliq bor. Hozircha keyingi bosqichga o'tishdan oldin Reading bo'yicha qo'shimcha test topshirishi tavsiya etiladi.";
+                } else {
+                    aiMsg.innerText = "Baholar yuqori (90%+), ammo savollarga o'rtacha javob berish tezligi juda yuqori. Bu bilim yuzaki o'zlashtirilgan bo'lishi mumkinligini bildiradi. Yangi vaziyatli savollar bilan tekshirishni tavsiya qilaman.";
+                }
+
+                chatMessages.appendChild(aiMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 600);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendUserMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatMessages = document.getElementById('chat-messages');
+            const userMsg = document.createElement('div');
+            userMsg.className = "bg-brand-600 text-white p-3 rounded-2xl max-w-[85%] ml-auto text-right";
+            userMsg.innerText = text;
+            chatMessages.appendChild(userMsg);
+
+            input.value = '';
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = "bg-slate-100 p-3 rounded-2xl max-w-[85%] text-slate-800";
+                aiMsg.innerText = "Hurmatli foydalanuvchi, savolingiz bo'yicha o'quvchining so'nggi 3 ta dars natijalari tahlil qilindi va o'xshash holatlar bazasiga mos ravishda harakatlar rejasi tayyorlandi.";
+                chatMessages.appendChild(aiMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 700);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // API Token Copy & Test
+        function copyApiToken() {
+            document.execCommand('copy');
+            alert('API Token muvaffaqiyatli nusxalandi!');
+        }
+
+        function testApiCall() {
+            const resultBox = document.getElementById('api-result-box');
+            resultBox.classList.remove('hidden');
+        }
+    </script>
+
+</body>
+</html>
